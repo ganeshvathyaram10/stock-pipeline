@@ -41,11 +41,14 @@ if st.sidebar.button("🔄 Fetch Latest Data"):
             st.sidebar.error("Fetch failed — check API key or rate limit")
 
 # Load data
+# Auto-fetch if database is empty
+create_tables()
 df_raw = get_prices(symbol, limit=200)
-
 if df_raw.empty:
-    st.warning(f"No data found for {symbol}. Click 'Fetch Latest Data' in the sidebar.")
-    st.stop()
+    df_new = fetch_daily(symbol)
+    if df_new is not None:
+        insert_prices(df_new, symbol)
+        df_raw = get_prices(symbol, limit=200)
 
 df_feat      = build_features(df_raw)
 feature_cols = get_feature_columns(df_feat)

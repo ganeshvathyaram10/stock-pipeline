@@ -1,9 +1,14 @@
 import sqlite3
 import pandas as pd
-from datetime import datetime
+import os
 
-
-DB_PATH = "data/stocks.db"
+# Works both locally and on Streamlit Cloud
+if os.path.exists("/mount/src"):
+    # Running on Streamlit Cloud
+    DB_PATH = "/tmp/stocks.db"
+else:
+    # Running locally
+    DB_PATH = "data/stocks.db"
 
 
 def get_connection():
@@ -30,18 +35,17 @@ def create_tables():
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS predictions (
-            id             INTEGER PRIMARY KEY AUTOINCREMENT,
-            symbol         TEXT NOT NULL,
-            predicted_at   TEXT NOT NULL,
-            predicted_for  TEXT NOT NULL,
+            id              INTEGER PRIMARY KEY AUTOINCREMENT,
+            symbol          TEXT NOT NULL,
+            predicted_at    TEXT NOT NULL,
+            predicted_for   TEXT NOT NULL,
             predicted_price REAL,
-            actual_price   REAL
+            actual_price    REAL
         )
     """)
 
     conn.commit()
     conn.close()
-    print("Tables created successfully")
 
 
 def insert_prices(df, symbol):
@@ -60,7 +64,7 @@ def insert_prices(df, symbol):
             print(f"Insert error: {e}")
     conn.commit()
     conn.close()
-    print(f"Inserted {inserted} rows for {symbol}")
+    return inserted
 
 
 def get_prices(symbol, limit=200):
