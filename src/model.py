@@ -7,8 +7,13 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, classification_report
 
 
-MODEL_PATH  = "models/stock_model.pkl"
-SCALER_PATH = "models/stock_scaler.pkl"
+import os
+if os.path.exists("/mount/src"):
+    MODEL_PATH  = "/tmp/stock_model.pkl"
+    SCALER_PATH = "/tmp/stock_scaler.pkl"
+else:
+    MODEL_PATH  = "models/stock_model.pkl"
+    SCALER_PATH = "models/stock_scaler.pkl"
 
 
 def train(df_feat, feature_cols):
