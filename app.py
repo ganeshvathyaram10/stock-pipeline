@@ -6,7 +6,7 @@ import sys
 import os
 
 sys.path.insert(0, 'src')
-from database import get_prices, create_tables
+from database import get_prices, create_tables, insert_prices
 from features import build_features, get_feature_columns
 from model import train, predict
 from ingestion import fetch_daily, fetch_quote
